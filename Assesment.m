@@ -1,6 +1,6 @@
-load('matlab/filters.mat');
-load('matlab/roberts.mat');
-load('matlab/sobel.mat');
+load('labs/matlab/filters.mat');
+load('labs/matlab/roberts.mat');
+load('labs/matlab/sobel.mat');
 
 img1 = double(rgb2gray(imread('10905 JL.bmp')));
 img2 = double(rgb2gray(imread('43590 AM.bmp')));
@@ -18,6 +18,6 @@ img1difference = differenceFilter(img1, 10);
 
 %imshow(img1sobel);
 %imshow(img1roberts);
-%imshow(img1laplace);
+imshow(img1laplace);
 
-imshow(img1difference);
+%imshow(img1difference);
