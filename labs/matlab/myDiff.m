@@ -12,14 +12,15 @@ function [fp, tp, fn, tn] = myDiff(known,test)
     
     for i=1: width
         for j = 1 : height
-            if (known(i,j) == 1)
-                if test(i,j) == 1
+            
+            if (known(i,j) == 0)
+                if (test(i,j) == 0)
                     tp = tp + 1;
                 else
                     fn = fn + 1;
                 end
             else
-                if test(i,j) == 1
+                if (test(i,j) == 0)
                     fp = fp + 1;
                 else
                     tn = tn + 1;

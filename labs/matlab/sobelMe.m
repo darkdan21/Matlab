@@ -1,4 +1,4 @@
-function A = sobelMe(image, threshold);
+function A = sobelMe(image, threshold)
 
     load('sobel.mat');
 

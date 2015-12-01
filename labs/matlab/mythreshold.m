@@ -1,4 +1,4 @@
 function A = mythreshold(img, threshold )
-    A = (abs(img)<threshold);
+    A = im2double(img<threshold);
 end
 
