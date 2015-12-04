@@ -2,55 +2,50 @@ load('labs/matlab/filters.mat');
 load('labs/matlab/roberts.mat');
 load('labs/matlab/sobel.mat');
 
-img1 = im2double(rgb2gray(imread('10905 JL.bmp')));
-img2 = im2double(rgb2gray(imread('43590 AM.bmp')));
-img3 = im2double(rgb2gray(imread('9343 AM.bmp')));
+img1 = imread('10905 JL.bmp');
+img2 = imread('43590 AM.bmp');
+img3 = imread('9343 AM.bmp');
+
+img1 = im2double(img1(:, :, 2));
+img2 = im2double(img2(:, :, 2));
+img3 = im2double(img3(:, :, 2));
 
 img1Correct = 1.-im2double(imread('10905 JL Edges.bmp'));
 img2Correct = 1.-im2double(imread('43590 AM Edges.bmp'));
 img3Correct = 1.-im2double(imread('9343 AM Edges.bmp'));
 
+img1 = img2;
+
 %Sobel
-filtSobel = (fspecial('gaussian', 3, 0.5));
+filtSobel = (fspecial('gaussian', 4, 1.5));
 img1GaussSobel = double(applyFilter(img1, filtSobel, 0));
-img1Sobel = sobelMe(img1GaussSobel,0.17);
+img1Sobel = sobelMe(img1GaussSobel,0.31);
 
 %Roberts
-filtRoberts = (fspecial('gaussian', 3, 0.5));
+filtRoberts = (fspecial('gaussian', 6, 1.5));
 img1GaussRoberts = double(applyFilter(img1, filtRoberts, 0));
-img1Roberts = robertsMe(img1GaussRoberts,0.04);
+img1Roberts = robertsMe(img1GaussRoberts,0.045);
 
 %laplacian
-img1Laplace = applyFilter(img1, laplacian,0.015);
-%0.015
+img1Laplace = applyFilter(img1, laplacian,0.021);
+
 %Laplacian of Gaussian
-filtGauss = (fspecial('gaussian', 9, 4));
-filterLoG = conv2(laplacian, filtGauss);
-img1LoG = normalise(applyFilter(img3, filterLoG, 0));
-img1LoG = mythreshold(img1LoG,0.6);
-%0.715
+img1LoG = loGMe(img1, 9, 3.5, 0.66, 0.8);
 
-img1LoG = loGMe(img1, 4, 2, 0.005);
-
-g = double(applyFilter(img1, filtGauss, 0));
-log = applyFilter(g, laplacian, 0);
 
 %GradientFilter
-filtDiff = (fspecial('gaussian', 3, 0.5));
-img1GaussDiff = double(applyFilter(img1, filtDiff, 0));
-img1Diff = differenceFilter(img1GaussDiff, 0.07);
+filtDiff = (fspecial('gaussian', 4, 1.5));
+img1GaussDiff = double(applyFilter(img1, filtDiff,0));
+img1Diff = differenceFilter(img1GaussDiff, 0.026);
 
-%imshow(img1Sobel);
-%imshow(img1Roberts);
-imshow(img1LoG);
-%imshow(img1LoG);
-%imshow(img1Diff);
-%imshow(img1Correct);
-%imshow(imfuse(img1,img1Laplace));
 
-[fp, tp, fn, tn] = myDiff(img1Correct, img1LoG)
+current = img1Diff;
 
-specificity = tn/(fp+tn)
-sensitivity = tp/(tp+fn)
+[fpr, tpr] = ROC(img2Correct, current)
 
-fpr = 1 - specificity
+filename = 'img2Diff - gauss 4x1.5 - threshold - 0.026';
+
+path = '/home/students/dgj470/work/Year2/Computer Vision/Assesment/labs/results/';
+
+imshow(current);
+imwrite(current, strcat(path,filename,' -fpr ',  num2str(fpr), ' -tpr ', num2str(tpr) ,'.jpg'),'jpg');
